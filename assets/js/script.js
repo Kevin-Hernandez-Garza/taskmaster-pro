@@ -45,7 +45,7 @@ var saveTasks = function () {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
-
+// added by me 
 // delegating clicks to the parent 'ul' with the class 'list-group', a click callback
 $(".list-group").on("click", "p", function () {
   var text = $(this)
@@ -151,7 +151,7 @@ $(".list-group").on("blur", "input[type='text']", function () {
   // replace input with span element 
   $(this).replaceWith(taskSpan);
 });
-
+// end by me 
 
 // modal was triggered
 $("#task-form-modal").on("show.bs.modal", function () {
