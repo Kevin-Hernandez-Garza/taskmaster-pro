@@ -151,6 +151,83 @@ $(".list-group").on("blur", "input[type='text']", function () {
   // replace input with span element 
   $(this).replaceWith(taskSpan);
 });
+
+// this will make the tasks items draggable across different columns
+// we use the sortable method, turns every class with the name list-group into a sortable list
+// the connectWith will link the sortable lists with the same class
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone", // tell JQuery to create a copy from the original element to avoid click events from trigerring on the original element 
+  activate: function (event) {
+    console.log("activate", this); // activate is an event listener
+  },
+  deactivate: function (event) {
+    console.log("deactivate", this);
+  },
+  over: function (event) {
+    console.log("over", event.target); // over is an event listener
+  },
+  out: function (event) {
+    console.log("out", event.target); // out is an event listener
+  },
+  update: function (event) {
+    // declaring a new array before the loop starts 
+    // array to store the task data in
+    var tempArr = [];
+
+    // loop over current set of children in sortable list
+    // each method will run a callback function for every item/element in the array
+    $(this).children().each(function () {
+      var text = $(this)
+        .find("p")
+        .text()
+        .trim();
+
+      var date = $(this)
+        .find("span")
+        .text()
+        .trim();
+
+      // add task data to the array as an object
+      tempArr.push({
+        text: text,
+        date: date
+      });
+    });
+    // below we are saving the drag tasks items once they are moved and the page is refreshed
+    // trim down list's ID to match object property 
+    var arrName = $(this)
+      .attr("id")
+      .replace("list-", "");
+    // update array on task object and save
+    tasks[arrName] = tempArr;
+    saveTasks();
+
+    console.log(tempArr);
+  }
+});
+
+
+// deleting a task item
+$("#trash").droppable({
+  accept: ".card .list-group-item",
+  tolerance: "touch",
+  // the drop method means the user is triying to delete a task
+  drop: function (event, ui) {
+    // this makes the item draggable and remove it entirely
+    ui.draggable.remove();
+    console.log("drop");
+  },
+  over: function (event, ui) {
+    console.log("over");
+  },
+  out: function (event, ui) {
+    console.log("out");
+  }
+});
+
 // end by me 
 
 // modal was triggered
